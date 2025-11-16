@@ -1,3 +1,4 @@
+import os 
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -21,25 +22,21 @@ menu = st.sidebar.selectbox(
 )
 
 # 1. MENU UPLOAD DATA
-if menu == "Upload Data":
-    st.header("📤 Upload Dataset Churn")
+default_file = "data/churn.csv"
 
-    uploaded_file = st.file_uploader("Upload file CSV", type=["csv"])
-
-    if uploaded_file:
-        df = pd.read_csv(uploaded_file)
-        st.session_state.df = df
-        st.success("File berhasil diupload!")
-
+if "df" not in st.session_state:
+    if os.path.exists(default_file):
+        st.session_state.df = pd.read_csv(default_file)
 
 # 2. MENU TAMPILKAN DATA
 elif menu == "Tampilkan Data":
-    st.header("📄 Dataset Churn")
+    st.header("📊 Dataset Churn")
 
     if "df" not in st.session_state:
         st.warning("Silakan upload data terlebih dahulu.")
     else:
         df = st.session_state.df
+        st.dataframe(df)
 
         # ICON CARDS
         col1, col2, col3, col4, col5 = st.columns(5)
